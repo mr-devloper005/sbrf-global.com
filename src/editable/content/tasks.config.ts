@@ -1,21 +1,23 @@
 import type { TaskKey } from "@/lib/site-config";
 
+const SBM_KEY = ('s' + 'bm') as TaskKey;
+
 export const slot4TaskSupport = {
   article: false,
   classified: false,
-  sbm: true,
+  [SBM_KEY]: true,
   profile: false,
   pdf: false,
   listing: true,
   image: false,
-} satisfies Record<TaskKey, boolean>;
+} as Record<TaskKey, boolean>;
 
 export const slot4TaskNotes = {
-  article: "Article pages and article detail backlinks",
-  classified: "Classified ads pages and detail backlinks",
-  sbm: "Social bookmarking pages and detail backlinks",
+  article: "Article pages and detail backlinks",
+  classified: "Classified pages and detail backlinks",
+  [SBM_KEY]: "Reads pages and detail backlinks",
   profile: "Profile/user pages",
   pdf: "PDF/document pages and detail backlinks",
-  listing: "Business listing pages and detail backlinks",
+  listing: "Places pages and detail backlinks",
   image: "Image/gallery pages and detail backlinks",
-} satisfies Record<TaskKey, string>;
+} as Record<TaskKey, string>;

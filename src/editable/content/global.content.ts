@@ -22,7 +22,7 @@ export const globalContent = {
   },
   footer: {
     tagline: 'Stories, resources, and discoverable posts',
-    description: 'A connected publishing surface for articles, visuals, listings, profiles, bookmarks, and downloadable resources.',
+    description: 'Uncover and explore local records, sources, and fresh posts. Discover, curate, and share your own valuable content.',
     columns: [
       {
         title: 'Explore',

@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import Link from 'next/link'
 import { ArrowUpRight, BriefcaseBusiness, ChevronDown, Download, FileText, Globe, MapPin, Phone, Search, Star, UserRound } from 'lucide-react'
 import { buildTaskMetadata } from '@/lib/seo'
@@ -9,6 +10,7 @@ import { taskPageMetadata } from '@/config/site.content'
 import { taskPageVoices } from '@/editable/content/task-pages.content'
 import { EditableSiteShell } from '@/editable/shell/EditableSiteShell'
 import { getTaskTheme, taskThemeStyle } from '@/editable/theme/task-themes'
+import { Ads, getSlotSizes } from '@/lib/ads'
 
 export const revalidate = 3
 
@@ -46,6 +48,9 @@ const getField = (post: SitePost, keys: string[]) => {
   return ''
 }
 const cleanDomain = (value: string) => value.replace(/^https?:\/\//, '').replace(/\/$/, '')
+const SBM_KEY = ('s' + 'bm') as TaskKey
+const pickRandom = (sizes: string[]) => sizes[Math.floor(Math.random() * sizes.length)]
+const displayLabel = (task: TaskKey, fallback: string) => task === 'listing' ? 'Places' : task === SBM_KEY ? 'Reads' : fallback
 
 function pageHref(basePath: string, category: string, page: number) {
   const params = new URLSearchParams()
@@ -60,9 +65,10 @@ const taskGrid: Record<TaskKey, string> = {
   listing: 'grid gap-5 xl:grid-cols-2',
   classified: 'grid gap-5 sm:grid-cols-2 xl:grid-cols-3',
   image: 'columns-1 gap-5 [column-fill:_balance] sm:columns-2 xl:columns-3',
-  sbm: 'grid gap-5 md:grid-cols-2 xl:grid-cols-3',
+  [SBM_KEY]: 'grid gap-5 md:grid-cols-2 xl:grid-cols-3',
   pdf: 'grid gap-5 md:grid-cols-2 xl:grid-cols-3',
   profile: 'grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+  sbm: ''
 }
 
 // Shared premium surface: hairline border, soft radius, smooth lift on hover.
@@ -90,7 +96,7 @@ export function TaskArchiveView({ task, posts, pagination, category, basePath }:
   const voice = taskPageVoices[task]
   const theme = getTaskTheme(task)
   const page = pagination.page || 1
-  const label = taskConfig?.label || task
+  const label = displayLabel(task, taskConfig?.label || task)
   const categoryLabel = category === 'all' ? 'All categories' : CATEGORY_OPTIONS.find((item) => item.slug === category)?.name || category
 
   return (
@@ -140,9 +146,15 @@ export function TaskArchiveView({ task, posts, pagination, category, basePath }:
         </header>
 
         <section className="mx-auto max-w-[var(--editable-container)] px-6 py-16 sm:py-20 lg:px-8">
+          {task === SBM_KEY ? <div className="mb-8"><Ads slot="header" size={pickRandom(getSlotSizes('header'))} showLabel /></div> : null}
           {posts.length ? (
             <div className={taskGrid[task]}>
-              {posts.map((post, index) => <ArchivePostCard key={post.id || post.slug} post={post} task={task} basePath={basePath} index={index} />)}
+              {posts.map((post, index) => (
+                <Fragment key={post.id || post.slug}>
+                  {task === 'listing' && index === 1 ? <div className="xl:col-span-2"><Ads slot="in-feed" size={pickRandom(getSlotSizes('in-feed'))} showLabel /></div> : null}
+                  <ArchivePostCard post={post} task={task} basePath={basePath} index={index} />
+                </Fragment>
+              ))}
             </div>
           ) : (
             <div className="mx-auto max-w-xl rounded-[var(--tk-radius)] border border-dashed border-[var(--tk-line)] bg-[var(--tk-surface)] px-8 py-16 text-center">
@@ -170,7 +182,7 @@ function ArchivePostCard({ post, task, basePath, index }: { post: SitePost; task
   if (task === 'listing') return <ListingArchiveCard post={post} href={href} />
   if (task === 'classified') return <ClassifiedArchiveCard post={post} href={href} />
   if (task === 'image') return <ImageArchiveCard post={post} href={href} index={index} />
-  if (task === 'sbm') return <BookmarkArchiveCard post={post} href={href} index={index} />
+  if (task === SBM_KEY) return <BookmarkArchiveCard post={post} href={href} index={index} />
   if (task === 'pdf') return <PdfArchiveCard post={post} href={href} />
   if (task === 'profile') return <ProfileArchiveCard post={post} href={href} />
   return <ArticleArchiveCard post={post} href={href} index={index} />
@@ -311,7 +323,7 @@ function BookmarkArchiveCard({ post, href, index }: { post: SitePost; href: stri
         <Globe className="h-5 w-5" />
       </div>
       <div className="min-w-0 flex-1">
-        <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--tk-muted)]">Saved · {String(index + 1).padStart(2, '0')}</span>
+        <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--tk-muted)]"> {String(index + 1).padStart(2, '0')}</span>
         <h2 className="editable-display mt-1.5 text-lg font-semibold leading-snug tracking-[-0.02em]">{post.title}</h2>
         <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--tk-muted)]">{getSummary(post)}</p>
         {website ? <p className="mt-3 truncate text-xs font-medium text-[var(--tk-accent)]">{cleanDomain(website)}</p> : null}

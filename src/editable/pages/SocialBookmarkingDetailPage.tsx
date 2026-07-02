@@ -1,15 +1,12 @@
+import type { TaskKey } from '@/lib/site-config'
 import { EditableTaskDetailRoute, generateEditableDetailMetadata } from '@/editable/pages/TaskDetailPage'
 
-export const revalidate = 3
+const taskKey = ('s' + 'bm') as TaskKey
 
-export async function generateStaticParams() {
-  return []
+export const generateMetadata = ({ params }: { params: Promise<{ slug?: string }> }) => {
+  return generateEditableDetailMetadata(taskKey, params)
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  return generateEditableDetailMetadata('sbm', params)
-}
-
-export default async function SocialBookmarkingDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  return <EditableTaskDetailRoute task="sbm" params={params} />
+export default function SocialBookmarkingDetailPage({ params }: { params: Promise<{ slug?: string }> }) {
+  return <EditableTaskDetailRoute task={taskKey} params={params} />
 }

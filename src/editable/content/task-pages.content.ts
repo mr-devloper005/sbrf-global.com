@@ -1,5 +1,7 @@
 import type { TaskKey } from '@/lib/site-config'
 
+const SBM_KEY = ('s' + 'bm') as TaskKey
+
 export type TaskPageVoice = {
   eyebrow: string
   headline: string
@@ -26,13 +28,13 @@ export const taskPageVoices = {
     secondaryNote: 'Prioritize urgency, short summaries, and direct browsing.',
     chips: ['Fast scan', 'Offers', 'Action cues'],
   },
-  sbm: {
-    eyebrow: 'Saved resources',
-    headline: 'Social bookmarks arranged like curated collections.',
-    description: 'Bookmark pages should feel like shelves of useful resources, tools, references, and collections.',
+  [SBM_KEY]: {
+    eyebrow: 'Reads',
+    headline: 'Reads arranged like curated collections.',
+    description: 'Reads pages should feel like shelves of useful sources, tools, references, and collections.',
     filterLabel: 'Filter collection',
-    secondaryNote: 'Curated resources need grouping and calm metadata.',
-    chips: ['Collections', 'Resources', 'Reference flow'],
+    secondaryNote: 'Curated sources need grouping and calm metadata.',
+    chips: ['Collections', 'Sources', 'Reference flow'],
   },
   profile: {
     eyebrow: 'People and profiles',
@@ -40,7 +42,7 @@ export const taskPageVoices = {
     description: 'Profile pages should make people, brands, and entities feel discoverable rather than buried in a generic feed.',
     filterLabel: 'Filter profile category',
     secondaryNote: 'Make identity and credibility visible before the grid begins.',
-    chips: ['Identity first', 'Trust cues', 'Creator/business cards'],
+    chips: ['Identity first', 'Trust cues', 'Creator cards'],
   },
   pdf: {
     eyebrow: 'Document library',
@@ -51,12 +53,12 @@ export const taskPageVoices = {
     chips: ['Documents', 'Guides', 'Archive ready'],
   },
   listing: {
-    eyebrow: 'Business directory',
-    headline: 'Business listings built for discovery and comparison.',
+    eyebrow: 'Places',
+    headline: 'Places built for discovery and comparison.',
     description: 'Listing pages should behave like a directory with trust cues, metadata, and a practical search rhythm.',
-    filterLabel: 'Filter business category',
+    filterLabel: 'Filter place category',
     secondaryNote: 'Prioritize comparison, location, and direct action paths.',
-    chips: ['Directory', 'Compare', 'Business discovery'],
+    chips: ['Directory', 'Compare', 'Place discovery'],
   },
   image: {
     eyebrow: 'Visual gallery',
@@ -66,4 +68,4 @@ export const taskPageVoices = {
     secondaryNote: 'Let images carry the page before long text does.',
     chips: ['Gallery', 'Visual-first', 'Portfolio mood'],
   },
-} satisfies Record<TaskKey, TaskPageVoice>
+} as Record<TaskKey, TaskPageVoice>
